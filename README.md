@@ -1,40 +1,85 @@
-# DonaLabs Engineering Evaluation Repository
+# SupportDesk ── Engineering Evaluation
 
-This repository contains reusable full-stack engineering challenges used in the DonaLabs hiring process.
+SupportDesk is a premium, real-time support ticket management platform. It combines a seamless user experience for customers with a powerful, reactive dashboard for support agents.
 
-## Purpose
+## 🚀 My Approach
 
-The goal is to evaluate engineering judgment in realistic, product-oriented exercises:
+My goal was to build a system that feels "alive." Instead of a static CRUD app, I focused on high-fidelity interactions and real-time data synchronization.
 
-- How candidates interpret ambiguity
-- How they model logic and structure code
-- How they connect backend logic to UI behavior
-- How clearly they communicate tradeoffs
+### The Tech Stack
 
-## Candidate Submission Flow
+- **Frontend**: [SvelteKit](https://kit.svelte.dev/) was chosen for its exceptional reactivity and lean component architecture.
+- **Backend/Database**: [Supabase](https://supabase.com/) provides the engine for Authentication, PostgreSQL storage, and real-time database listeners.
+- **Aesthetics**: **Vanilla CSS** with modern variables. I avoided utility frameworks to implement a bespoke design system featuring glassmorphism, smooth micro-animations, and a "SD" brand identity.
 
-1. Fork this repository.
-2. Create a branch named `solution/<firstname-lastname>`.
-3. Complete the assigned challenge in `solutions/<firstname-lastname>/`.
-4. Add a short `README.md` inside your solution folder covering:
-   - Your approach
-   - Key tradeoffs
-   - How to run your solution
-   - What you would improve with more time
-5. Open a Pull Request to `main`.
+### High-Level Logic
 
-## Challenge Catalog
+- **Real-time Threads**: Messages are synchronized across clients using Supabase Realtime, ensuring no manual refreshes are needed.
+- **Secure by Design**: Implemented PostgreSQL Row-Level Security (RLS) to ensure users only see their own tickets while agents retain full visibility.
+- **Professional Workflow**: Tickets move through a structured state machine: **Open** → **In Progress** → **Resolved**.
 
-- [01 - Workflow Status Playground](challenges/01-status-transition/README.md)
+## ⚖️ Key Tradeoffs
 
-See all challenge entries in [challenges/README.md](challenges/README.md).
+Any engineering project involves choices. Here the primary ones:
 
-## Evaluator Resources
+1.  **Vanilla CSS over Tailwind**: While Tailwind is faster for prototyping, I opted for pure CSS to demonstrate a deep understanding of layouts (Grid/Flex) and to achieve a more unique, crafted aesthetic that utility classes can sometimes make generic.
+2.  **Lightweight State Management**: I utilized Svelte's built-in stores and reactive statements rather than a heavy state management library. This reduces the application's footprint and makes the data flow easier to trace.
+3.  **Supabase Realtime vs. Custom WebSockets**: I chose Supabase's managed real-time layer. This allowed me to focus on the product's UX rather than infrastructure, though it trades off some fine-grained control over the socket protocol.
 
-- [Evaluation Rubric](rubric/evaluation-rubric.md)
-- [Hiring Narrative (DonaLabs + PsonalHealth)](docs/hiring.md)
+## 🛠️ How to Run
 
-## Conventions
+Follow these steps to get SupportDesk running locally:
 
-- Branch naming: `solution/<firstname-lastname>`
-- Solution location: `solutions/<firstname-lastname>/`
+### 1. Prerequisites
+
+- [Node.js](https://nodejs.org/) (v18+)
+- A [Supabase](https://supabase.com/) project
+
+### 2. Installation
+
+```bash
+# Clone the repository
+git clone [repository-url]
+cd ticketcrud
+
+# Install dependencies
+npm install
+```
+
+### 3. Environment Setup
+
+Create a `.env` file in the root directory:
+
+```env
+PUBLIC_SUPABASE_URL=your-project-url
+PUBLIC_SUPABASE_ANON_KEY=your-anon-key
+```
+
+### 4. Database Configuration
+
+Run the following SQL scripts (found in `.sql` files or provided in my implementation logs) in your Supabase SQL Editor:
+
+1.  **Schema Setup**: Define `tickets`, `ticket_messages`, and `profiles` tables.
+2.  **Admin Logic**: Run the `create_admin_user.sql` to set up your support staff account.
+3.  **Security Policies**: Run `fix_admin_chat.sql` to enable RLS for chat.
+
+### 5. Start Developing
+
+```bash
+npm run dev
+```
+
+Open `http://localhost:5173` to view the app.
+
+## 🔮 Future Improvements
+
+With more time, I would have loved to implement:
+
+- **File Attachments**: Enabling users to upload screenshots directly into the chat thread.
+- **Advanced Search**: Implementing full-text search for tickets using PostgreSQL's GIN indexing.
+- **Email Hooks**: Automatic email notifications for users when an agent replies to their ticket.
+- **Performance Analytics**: A dashboard showing "Mean Time to Resolution" (MTTR) for support agents.
+
+---
+
+_Created by Ferdinard Raymond as part of the DonaLabs Engineering Evaluation._
